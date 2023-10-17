@@ -6,6 +6,7 @@ import static net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig.defaultCluste
 import static net.mguenther.kafka.junit.Wait.delay;
 
 import com.bakdata.uni.RunnersDataProducer;
+import com.bakdata.uni.RunnersRawData;
 import io.confluent.kafka.serializers.KafkaJsonDeserializerConfig;
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaDeserializer;
 import java.util.List;
@@ -69,13 +70,13 @@ class RunnersDataProducerIntegrationTest {
             .allSatisfy(keyValue -> this.softly.assertThat(keyValue.getValue().runnerId()).isEqualTo("123"))
             .satisfiesExactly(
                 keyValue -> this.softly.assertThat(keyValue.getValue().runTime())
-                    .isEqualTo(0),
+                    .isEqualTo(1697202000),
                 keyValue -> this.softly.assertThat(keyValue.getValue().runTime())
-                    .isEqualTo(1),
+                    .isEqualTo(1697202001),
                 keyValue -> this.softly.assertThat(keyValue.getValue().runTime())
-                    .isEqualTo(2),
+                    .isEqualTo(1697202002),
                 keyValue -> this.softly.assertThat(keyValue.getValue().runTime())
-                    .isEqualTo(3)
+                    .isEqualTo(1697202003)
             );
     }
 

@@ -1,4 +1,4 @@
-package com.bakdata.kafkasummit.utils;
+package com.bakdata.uni.utils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

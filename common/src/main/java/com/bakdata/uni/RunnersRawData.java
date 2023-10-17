@@ -1,4 +1,4 @@
-package com.bakdata.kafkasummit;
+package com.bakdata.uni;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

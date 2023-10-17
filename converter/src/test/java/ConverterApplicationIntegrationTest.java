@@ -3,7 +3,7 @@ import static net.mguenther.kafka.junit.EmbeddedKafkaCluster.provisionWith;
 import static net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig.defaultClusterConfig;
 
 import com.bakdata.uni.ConverterApplication;
-import com.bakdata.kafkasummit.RunnersRawData;
+import com.bakdata.uni.RunnersRawData;
 import com.bakdata.uni.RunnersStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

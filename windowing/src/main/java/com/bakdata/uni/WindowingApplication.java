@@ -9,20 +9,12 @@ import java.util.Map;
 import java.util.Properties;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.Serdes.VoidSerde;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.Grouped;
 import org.apache.kafka.streams.kstream.KStream;
-import org.apache.kafka.streams.kstream.KTable;
-import org.apache.kafka.streams.kstream.Materialized;
-import org.apache.kafka.streams.kstream.Named;
-import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.TimeWindows;
-import org.apache.kafka.streams.kstream.Windowed;
 import picocli.CommandLine;
 
 @Slf4j
@@ -52,32 +44,8 @@ public class WindowingApplication extends KafkaStreamsApplication {
                                 .withTimestampExtractor(new RunTimeExtractor()));
 
         final SpecificAvroSerde<CountAndSum> countAndSumSerde = this.getCountAndSumSerde();
-        final KTable<String, CountAndSum> heartRateCountAndSum =
-                inputStream.selectKey((key, value) -> value.getRunnerId() + "_" + value.getSession())
-                        .peek((key, value) -> log.error("key={}, value={}", key, value))
-                        .groupByKey(Grouped.with(Serdes.String(), this.getRunnerStatusSerde()))
-                        .windowedBy(windows)
-                        .aggregate(() -> new CountAndSum(0L, 0.0),
-                                (key, value, aggregate) -> getCountAndSumOfHeartRate(value, aggregate),
-                                Materialized.with(Serdes.String(), countAndSumSerde)
-                        )
-                        .toStream()
 
-                        .map((Windowed<String> key, CountAndSum count) ->
-                                new KeyValue<>("%s_%s".formatted(key.key(), key.window().start()), count))
-
-                        .toTable(Materialized.with(Serdes.String(), countAndSumSerde));
-
-        final KTable<String, Double> averageHeartRate =
-                heartRateCountAndSum.mapValues(value -> value.getSum() / value.getCount(),
-                        Named.as("Average-Heart-Rate"),
-                        Materialized.with(Serdes.String(), Serdes.Double()));
-
-        averageHeartRate.toStream()
-                .peek(
-                        (key, value) -> log.error("Aggregated value key is ={}, value={}", key, value)
-                )
-                .to(this.getOutputTopic(), Produced.with(Serdes.String(), Serdes.Double()));
+        // Your code goes here...!
     }
 
     private static CountAndSum getCountAndSumOfHeartRate(final RunnersStatus value, final CountAndSum aggregate) {
