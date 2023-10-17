@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.bakdata.uni.proto";
+option java_outer_classname = "RangeIndexer";
+
+package com.bakdata.uni;
+
+service RangeIndexerService {
+    rpc getRunnerStatusRange (RangeRequest) returns (RunnerStatusReply) {}
+}
+
+message RangeRequest {
+    string runnerId = 1;
+    string sessionId = 2;
+    int32 from = 3;
+    int32 to = 4;
+    Store store = 5;
+}
+
+message RunnerStatusReply {
+    repeated RunnerAnalytics runnerStatusList = 1;
+}
+
+message RunnerAnalytics {
+    int32 distance = 1;
+    int32 heartRate = 2;
+    double speed = 3;
+    int32 runTime = 4;
+}
+
+enum Store {
+    UNORDERED_RUN_TIME = 0;
+    ORDERED_RUN_TIME = 1;
+    ORDERED_DISTANCE = 2;
+}
