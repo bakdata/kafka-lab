@@ -1,7 +1,7 @@
 # Windowing
-In the final step of the pipeline we will consume the `runners-analytics` topic
-and based on the [`run_time`](https://github.com/bakdata/kafka-lab/blob/main/common/src/main/avro/runners-status.avsc#L27)
-we will window the data and calculate the average heart rate.
+In the final pipeline step we will consume the `runners-analytics` topic.
+We will window the data and calculate the average heart rate
+based on event time, here [`run_time`](https://github.com/bakdata/kafka-lab/blob/main/common/src/main/avro/runners-status.avsc#L27).
 
 ![img.png](img.png)
 
