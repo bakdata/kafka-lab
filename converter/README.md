@@ -1,9 +1,9 @@
 # Converter
 
-In this Kafka streams application we will consume the data from `raw-data` topic and convert the JSON schema into a
-compact [Avro schema](https://github.com/bakdata/kafka-lab/tree/main/common/src/main/avro). We will remove the
-unnecessary fields (longitude, latitude, attitude) and just keep the fields we
-need.
+In this Kafka Streams application we will consume data from the `raw-data` topic and convert the JSON schema to a
+compact [Avro schema](https://github.com/bakdata/kafka-lab/tree/main/common/src/main/avro). Further, we will remove
+unnecessary fields (longitude, latitude, attitude) and keep information we
+need only.
 
 ![img.png](img.png)
 
