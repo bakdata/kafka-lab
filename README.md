@@ -9,6 +9,6 @@ the data and then calculate the average heart rate of the runners in a time wind
 
 Go to each component for more information and implement the code so the test(s) pass! Good luck!
 
-- [producer](https://github.com/bakdata/kafka-lab/tree/main/producer)
-- [converter](https://github.com/bakdata/kafka-lab/tree/init-commit/converter)
-- [windowing](https://github.com/bakdata/kafka-lab/tree/init-commit/windowing)
+- [producer](producer)
+- [converter](converter)
+- [windowing](windowing)
