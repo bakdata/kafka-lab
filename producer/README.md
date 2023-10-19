@@ -2,9 +2,9 @@
 
 In this Java application we will use the Kafka Producer API to ingest data into a Kafka topic.
 We will read a [CSV file](https://github.com/bakdata/kafka-lab/blob/main/data-producer/src/main/resources/data.csv)
-and convert the records into
-a [JSON](https://github.com/bakdata/kafka-lab/blob/main/common/src/main/java/com/bakdata/uni/RunnersRawData.java) and
-produce the data.
+and convert records to
+[JSON](https://github.com/bakdata/kafka-lab/blob/main/common/src/main/java/com/bakdata/uni/RunnersRawData.java)
+before ingesting.
 
 ![img.png](img.png)
 
