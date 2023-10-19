@@ -33,11 +33,18 @@ public class WindowingApplication extends KafkaStreamsApplication {
         startApplication(new WindowingApplication(), args);
     }
 
+    private static CountAndSum getCountAndSumOfHeartRate(final RunnersStatus value, final CountAndSum aggregate) {
+        aggregate.setCount(aggregate.getCount() + 1);
+        aggregate.setSum(aggregate.getSum() + value.getHeartRate());
+        return aggregate;
+    }
 
     @Override
     public void buildTopology(final StreamsBuilder streamsBuilder) {
+        // create TimeWindow
         final TimeWindows windows = TimeWindows.ofSizeAndGrace(this.windowSize, this.gracePeriod);
 
+        // Read the input stream from the input topic and define the time stamp
         final KStream<Void, RunnersStatus> inputStream = streamsBuilder
                 .stream(this.getInputTopics(),
                         Consumed.with(new VoidSerde(), this.getRunnerStatusSerde())
@@ -46,12 +53,35 @@ public class WindowingApplication extends KafkaStreamsApplication {
         final SpecificAvroSerde<CountAndSum> countAndSumSerde = this.getCountAndSumSerde();
 
         // Your code goes here...!
+
+        // 1. select the key you want to group the data with --> <runnerId>_<runSession>
+
+        // 2. group the key
+
+        // 3. window your group
+
+        // 4. aggregate the data. Use the count and sum function
+
+        // 5. map your aggregated keys to this format --> <runnerId>_<runSession>_<windowsStartTime>
     }
 
-    private static CountAndSum getCountAndSumOfHeartRate(final RunnersStatus value, final CountAndSum aggregate) {
-        aggregate.setCount(aggregate.getCount() + 1);
-        aggregate.setSum(aggregate.getSum() + value.getHeartRate());
-        return aggregate;
+    @Override
+    public Topology createTopology() {
+        final Topology topology = super.createTopology();
+        log.info("The topology is: \n {}", topology.describe());
+        return topology;
+    }
+
+    @Override
+    public String getUniqueAppId() {
+        return String.format("windowing-app-%s", this.getOutputTopic());
+    }
+
+    @Override
+    protected Properties createKafkaProperties() {
+        final Properties kafkaConfig = super.createKafkaProperties();
+        kafkaConfig.setProperty(SCHEMA_REGISTRY_URL_CONFIG, this.getSchemaRegistryUrl());
+        return kafkaConfig;
     }
 
     private SpecificAvroSerde<CountAndSum> getCountAndSumSerde() {
@@ -68,26 +98,6 @@ public class WindowingApplication extends KafkaStreamsApplication {
 
     private Map<String, String> getSerdeConfig() {
         return Map.of(SCHEMA_REGISTRY_URL_CONFIG, this.getSchemaRegistryUrl());
-    }
-
-
-    @Override
-    public Topology createTopology() {
-        final Topology topology = super.createTopology();
-        log.info("The topology is: \n {}", topology.describe());
-        return topology;
-    }
-
-    @Override
-    protected Properties createKafkaProperties() {
-        final Properties kafkaConfig = super.createKafkaProperties();
-        kafkaConfig.setProperty(SCHEMA_REGISTRY_URL_CONFIG, this.getSchemaRegistryUrl());
-        return kafkaConfig;
-    }
-
-    @Override
-    public String getUniqueAppId() {
-        return String.format("windowing-app-%s", this.getOutputTopic());
     }
 
 }

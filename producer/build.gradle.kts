@@ -1,8 +1,7 @@
 plugins {
     java
     idea
-    id("io.freefair.lombok") version "8.3"
-    id("com.google.cloud.tools.jib") version "3.4.0"
+    id("io.freefair.lombok") version "8.4"
 }
 
 group = "com.bakdata.uni"
@@ -51,11 +50,5 @@ dependencies {
     val kafkaVersion = "3.4.0"
     testImplementation(group = "net.mguenther.kafka", name = "kafka-junit", version = kafkaVersion) {
         exclude(group = "org.slf4j", module = "slf4j-log4j12")
-    }
-}
-
-jib {
-    to {
-        image = "raminqaf/runners-data-producers:1.0.0"
     }
 }

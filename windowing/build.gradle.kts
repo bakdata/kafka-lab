@@ -1,8 +1,7 @@
 plugins {
     java
     idea
-    id("io.freefair.lombok") version "8.3"
-    id("com.google.cloud.tools.jib") version "3.4.0"
+    id("io.freefair.lombok") version "8.4"
 }
 
 group = "com.bakdata.uni"
@@ -29,7 +28,7 @@ dependencies {
     implementation(group = "io.confluent", name = "kafka-streams-avro-serde", version = confluentVersion)
     implementation(group = "com.bakdata.kafka", name = "error-handling-avro", version = "1.4.1")
 
-    implementation(group = "info.picocli", name= "picocli", version = "4.7.5")
+    implementation(group = "info.picocli", name = "picocli", version = "4.7.5")
 
     implementation(project(":common"))
 
@@ -61,11 +60,5 @@ tasks {
     }
     test {
         useJUnitPlatform()
-    }
-}
-
-jib {
-    to {
-        image = "raminqaf/converter:1.0.0"
     }
 }

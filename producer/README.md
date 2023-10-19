@@ -6,8 +6,10 @@ and convert the records into
 a [JSON](https://github.com/bakdata/kafka-lab/blob/main/common/src/main/java/com/bakdata/uni/RunnersRawData.java) and
 produce the data.
 
+![img.png](img.png)
 
 ## Resources
+
 - [Streams bootstrap Kafka producer](https://github.com/bakdata/streams-bootstrap#kafka-producer)
 - [JSON Schema Serializer and Deserializer](https://docs.confluent.io/platform/current/schema-registry/fundamentals/serdes-develop/serdes-json.html)
 - [Reading CSV with Jackson](https://cowtowncoder.medium.com/reading-csv-with-jackson-c4e74a15ddc1)

@@ -2,6 +2,7 @@ package com.bakdata.uni;
 
 import static io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG;
 import static net.mguenther.kafka.junit.EmbeddedKafkaCluster.provisionWith;
+import static net.mguenther.kafka.junit.Wait.delay;
 
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import net.mguenther.kafka.junit.EmbeddedKafkaCluster;
 import net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig;
 import net.mguenther.kafka.junit.KeyValue;
@@ -36,16 +38,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(SoftAssertionsExtension.class)
 class WindowingApplicationIntegrationTest {
-    private final ObjectMapper csvMapper = new CsvMapper();
-
+    private static final int TIMEOUT_SECONDS = 5;
     private static final String INPUT_TOPIC = "runners-status";
-
     private static final String OUTPUT_TOPIC = "windowed-analytics";
-
     private static final EmbeddedKafkaCluster kafkaCluster =
             provisionWith(EmbeddedKafkaClusterConfig.defaultClusterConfig());
     private static final String SCHEMA_REGISTRY_URL = "mock://test123";
-
+    private final ObjectMapper csvMapper = new CsvMapper();
     @InjectSoftAssertions
     private SoftAssertions softly;
 
@@ -59,17 +58,43 @@ class WindowingApplicationIntegrationTest {
         kafkaCluster.stop();
     }
 
+    private static WindowingApplication createApp() {
+        final WindowingApplication app = new WindowingApplication();
+        app.setSchemaRegistryUrl(SCHEMA_REGISTRY_URL);
+        app.setBrokers(kafkaCluster.getBrokerList());
+        app.setInputTopics(List.of(INPUT_TOPIC));
+        app.setOutputTopic(OUTPUT_TOPIC);
+        app.setProductive(false);
+        app.setWindowSize(Duration.ofSeconds(6));
+        app.setGracePeriod(Duration.ofMillis(0));
+        return app;
+    }
+
+    /**
+     * <h2>Arrange</h2>
+     * Create output topic and configure the windowing application. The window size is set to 6 seconds.
+     * <h2>Act</h2>
+     * Start the streams application. The {@link #produceDataToInputTopic()} will read the
+     * <b>test-data.csv</b> file and produce each line to the input topic. The streams app will consume the records and
+     * produce them to the output topic. The are 600 data records in the CVS, each produced in a second.
+     * <h2>Assert</h2>
+     * We read the processed records in the output topic and assert them. We should have 11 windows (records). In the
+     * assertion you see the first three windows (records).
+     */
     @Test
     void shouldRunApp() throws InterruptedException, IOException {
-        kafkaCluster.createTopic(TopicConfig.withName(INPUT_TOPIC).useDefaults());
+        // Arrange
         kafkaCluster.createTopic(TopicConfig.withName(OUTPUT_TOPIC).useDefaults());
-
         final WindowingApplication app = createApp();
+
+        // Act
         final Thread runThread = new Thread(app);
         runThread.start();
-
         this.produceDataToInputTopic();
 
+        delay(TIMEOUT_SECONDS, TimeUnit.SECONDS);
+
+        // Assert
         final List<KeyValue<String, Double>> values = kafkaCluster.read(
                 ReadKeyValues
                         .from(OUTPUT_TOPIC, String.class, Double.class)
@@ -134,17 +159,5 @@ class WindowingApplicationIntegrationTest {
         }
 
 
-    }
-
-    private static WindowingApplication createApp() {
-        final WindowingApplication app = new WindowingApplication();
-        app.setSchemaRegistryUrl(SCHEMA_REGISTRY_URL);
-        app.setBrokers(kafkaCluster.getBrokerList());
-        app.setInputTopics(List.of(INPUT_TOPIC));
-        app.setOutputTopic(OUTPUT_TOPIC);
-        app.setProductive(false);
-        app.setWindowSize(Duration.ofSeconds(6));
-        app.setGracePeriod(Duration.ofMillis(0));
-        return app;
     }
 }

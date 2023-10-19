@@ -29,6 +29,12 @@ public class RunnersDataProducer extends KafkaProducerApplication {
     protected void runApplication() {
         log.info("Starting runners producer...");
         // Your code goes here...!
+
+        // 1. create a producer
+
+        // 2. read the CSV records line by line to JSON
+
+        // 3. send record to topic
     }
 
     @Override
