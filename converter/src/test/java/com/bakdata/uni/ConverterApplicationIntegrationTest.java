@@ -5,9 +5,6 @@ import static net.mguenther.kafka.junit.EmbeddedKafkaCluster.provisionWith;
 import static net.mguenther.kafka.junit.EmbeddedKafkaClusterConfig.defaultClusterConfig;
 import static net.mguenther.kafka.junit.Wait.delay;
 
-import com.bakdata.uni.ConverterApplication;
-import com.bakdata.uni.RunnersRawData;
-import com.bakdata.uni.RunnersStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.confluent.kafka.serializers.json.KafkaJsonSchemaSerializer;
